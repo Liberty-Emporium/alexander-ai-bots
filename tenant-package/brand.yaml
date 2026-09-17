@@ -1,0 +1,5 @@
+# The deployment's own name. This is what the platform calls itself in places
+# that are not baked into the compiled app.
+tenant:
+  id: mybots
+  product_name: Your Brand

@@ -1,0 +1,128 @@
+# Alexander AI Solutions — Bots Platform
+
+**AI coworkers you can hand real work to.** Each bot gets its own virtual computer — a real
+browser with its own logins, its own files, and only the tools you grant it. You talk to a bot
+like a person; it opens websites, clicks, types, reads, saves files, and remembers what it did.
+
+This repository is the **branding and deployment kit** for our platform: the files we use to
+stand up a private, white-labelled bot workspace on your own hardware, plus the scripts that
+keep its vault, help pages and graph in sync.
+
+> **Free to use, free to give away.** Everything here is MIT licensed. Take it, run it, brand it.
+
+---
+
+## Where this comes from
+
+This platform is built on **[OpenBot](https://github.com/CopilotKit/OpenBot)** by
+[CopilotKit](https://github.com/CopilotKit), which is released under the **MIT License**.
+OpenBot is the engine: the agent platform, the per-bot computer, the gateway that decides and
+records every action, the skills, routines and policy engine.
+
+What we add is the **branding and the deployment layer**: the look (artwork, glowing type,
+dark theme), the side-panel links, the per-app login gate, the Obsidian vault pages, the
+interactive Obsidian graph, the Help pages, and the OpenRouter key form.
+
+**We are grateful to the OpenBot authors.** If you find this useful, star their repository and
+read their documentation — most of what makes this work is theirs.
+
+- Upstream: <https://github.com/CopilotKit/OpenBot>
+- Upstream licence: MIT
+- This fork: MIT (see [`LICENSE`](LICENSE))
+
+## How updates work
+
+**Alexander AI Bots follows OpenBot, one week behind.**
+
+When OpenBot publishes an update, we wait **one week**, test it against this branding layer on
+a live deployment, fix anything the update moves, and then publish our own release. That gives
+us time to catch the breakages that a fresh upstream change can bring — and gives you a fork
+that has already been run, not just compiled.
+
+| Upstream | Alexander AI Bots |
+|---|---|
+| OpenBot releases an update | We begin testing it the same day |
+| — | One week of testing on a live deployment |
+| — | We publish our release with any branding fixes |
+
+If you want to follow upstream immediately, you can — see
+[`docs/updating-from-openbot.md`](docs/updating-from-openbot.md) for exactly which files to
+re-apply after pulling a new OpenBot image.
+
+## We can brand this for anyone
+
+This software is white-label. We can build the same platform for your business, under your
+name, your colours and your domain — with your own bots, your own logins and your own
+OpenRouter account. Nothing here is tied to us: the branding layer is a small set of files
+(a page shell, a few scripted edits to the app bundle, and the artwork).
+
+See [`docs/branding-for-customers.md`](docs/branding-for-customers.md) for what changes and
+what stays the same.
+
+## What it does
+
+- **As many bots as you want** — one per job. Each keeps its own conversations, files and logins.
+- **A virtual computer per bot** — a real browser on a real machine, with its own screen and profile.
+- **Take the wheel, then hand it back** — when a bot meets a login, you take control of its screen,
+  sign in yourself, and hand control back. Passwords go into the page, never to the bot.
+- **Channels that remember** — conversations survive restarts; pick them up days later.
+- **An Obsidian vault per bot** — permanent storage and long-term memory: plain Markdown notes the
+  bot reads and writes, with automatic Activity Log and Conversations records.
+- **An interactive Obsidian graph** — every note as a dot, click to open it, drag, zoom, filter.
+- **Skills** — your own playbooks, saved as instructions and invoked with `/`.
+- **Governed actions and an audit trail** — every action decided before it happens and recorded after.
+- **Routines** — scheduled work that runs without being asked again.
+- **Your choice of model through OpenRouter** — pay only for what you use.
+
+## Repository layout
+
+```
+branding/          The look: page shell, bundle patch script, assets
+deploy/            Deployment kit: env template, container run, tunnel, login gate
+tenant-package/    The bots, channels, brand and model for a deployment
+help/              Generates the in-app Help pages (including the OpenRouter key form)
+vault/             Generates the Obsidian vault pages and the graph
+services/          The small service that saves a new OpenRouter key into a deployment's .env
+docs/              How it works, branding for customers, updating from OpenBot
+```
+
+## Requirements
+
+- Docker (the platform runs as containers)
+- A domain on Cloudflare (for public access — or run it on your own network only)
+- An [OpenRouter](https://openrouter.ai) account with a little credit, for the models
+- A CopilotKit Intelligence key (free plan is available) for durable threads and memory
+
+## Quick start
+
+1. **Pull the engine**
+   ```bash
+   docker pull ghcr.io/copilotkit/openbot:latest
+   ```
+
+2. **Make a deployment folder** and copy the templates
+   ```bash
+   mkdir -p ~/my-bots && cd ~/my-bots
+   cp /path/to/this/repo/deploy/.env.example .env
+   cp -r /path/to/this/repo/tenant-package tenant
+   cp /path/to/this/repo/deploy/migrate.sh .
+   ```
+
+3. **Fill in `.env`** — the two keys that matter are `OPENAI_API_KEY` (your OpenRouter key)
+   and `INTELLIGENCE_API_KEY`. Generate the encryption key with `openssl rand -base64 32`.
+
+4. **Run it**
+   ```bash
+   bash /path/to/this/repo/deploy/docker-run.example.sh my-bots 3001
+   ```
+
+5. **Open it** at <http://localhost:3001>, and put it on your domain with the tunnel and login
+   gate in `deploy/` when you are ready.
+
+Full details, including the vault pages, the graph and the Help page, are in
+[`docs/how-it-works.md`](docs/how-it-works.md).
+
+## Licence
+
+MIT. This platform is built on OpenBot, also MIT — see [`LICENSE`](LICENSE) for the full text
+and the attribution.

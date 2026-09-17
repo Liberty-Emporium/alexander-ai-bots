@@ -1,0 +1,6 @@
+# The model the built-in bots think with, through OpenRouter.
+# Any model OpenRouter publishes can go here - see https://openrouter.ai/models
+model:
+  provider: openai
+  credential_secret_ref: openai-api-key
+  default_model: deepseek/deepseek-v4.1-flash

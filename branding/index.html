@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/favicon.png?v=3" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=3" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=3" />
+    <title>Alexander AI Bot</title>
+    <!-- Sets the theme before the first paint. Must stay inline and classic: `defer` or `type="module"` runs too late. -->
+    <script>
+      // localStorage throws in some privacy modes; a theme is not worth taking the app down for.
+      try {
+        const dark = window.localStorage.getItem("openbot-theme") === "dark";
+        document.documentElement.classList.toggle("dark", dark);
+        document.documentElement.style.colorScheme = dark ? "dark" : "light";
+      } catch {}
+    </script>
+    <script type="module" crossorigin src="/assets/index-CbN6XavV.js?v=6"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CNgXKueA.css">
+    <style>
+      /* Alexander AI Bot. Hero artwork full width behind everything, with dark
+         translucent surfaces so the words can be white and easy to read.
+         Sized generously for comfortable reading. Nothing here blocks input. */
+      html { background: rgb(2, 13, 38); font-size: 22px; }
+      body {
+        background-color: rgb(2, 13, 38);
+        background-image: linear-gradient(rgba(2, 10, 30, 0.45), rgba(2, 10, 30, 0.45)),
+                          url("/alexander-hero-2.png");
+        background-size: cover, cover;
+        background-position: center, center;
+        background-repeat: no-repeat, no-repeat;
+        background-attachment: fixed, fixed;
+      }
+      #root main { background: none; }
+
+      /* Dark translucent surfaces, so white words read everywhere. */
+      #root .bg-background {
+        background-color: rgba(6, 18, 43, 0.74) !important;
+      }
+      #root .bg-card {
+        background-color: rgba(8, 22, 50, 0.80) !important;
+      }
+      #root .bg-muted {
+        background-color: rgba(10, 26, 56, 0.70) !important;
+      }
+      #root .bg-secondary,
+      #root .bg-accent {
+        background-color: rgba(12, 28, 60, 0.75) !important;
+      }
+      #root .bg-popover {
+        background-color: rgba(6, 16, 40, 0.96) !important;
+      }
+      #root .bg-primary {
+        background-color: rgb(40, 150, 255) !important;
+      }
+      #root .bg-white {
+        background-color: rgba(8, 22, 50, 0.80) !important;
+      }
+
+      /* White centers on the words (not black). */
+      #root, #root * { color: #ffffff !important; }
+
+      /* Side panels stay transparent so the artwork shows through. */
+      #root .bg-sidebar {
+        background-color: transparent !important;
+        --sidebar-foreground: rgb(255, 255, 255);
+        --sidebar-accent-foreground: rgb(255, 255, 255);
+        --sidebar-ring: rgb(90, 160, 255);
+      }
+
+      /* Wider bot side panel, and larger type throughout. */
+      [style*="--sidebar-width"] {
+        --sidebar-width: 430px !important;
+      }
+      #root .text-\[14px\] { font-size: 21px !important; }
+      #root .text-\[13px\] { font-size: 20px !important; }
+      #root .text-\[12px\] { font-size: 18px !important; }
+      #root .text-\[11px\] { font-size: 17px !important; }
+      #root .text-\[10px\] { font-size: 16px !important; }
+      #root .text-xs { font-size: 18px !important; }
+
+      /* Light fire glow, tight so the letters stay crisp. */
+      #root main, #root main *,
+      #root .bg-sidebar, #root .bg-sidebar * {
+        text-shadow: 0 0 3px rgba(255, 190, 80, 0.5),
+                     0 0 9px rgba(255, 110, 0, 0.3) !important;
+      }
+
+      /* No box behind the words the user sends. */
+      #root [data-align="end"] [data-slot="bubble"],
+      #root [data-align="end"] [data-slot="bubble-content"] {
+        background-color: transparent !important;
+      }
+
+      /* Explore-agent cards: no box at all - the words and the avatar sit
+         straight on the artwork, with the avatar cooled to the site's blue. */
+      #root .bg-foreground\/10 {
+        background-color: transparent !important;
+        border: none !important;
+      }
+      #root .bg-background\/40,
+      #root .bg-background\/50 {
+        background-color: transparent !important;
+      }
+      /* Explore-agent cards carry no art of their own: the words sit straight
+         on the background. */
+      #root .bg-foreground\/10 > div:first-child { display: none !important; }
+      /* Every other bot avatar in the app, cooled to the site's blue. */
+      #root svg[viewBox="0 0 80 80"] {
+        filter: saturate(0.55) brightness(0.75) hue-rotate(190deg);
+      }
+
+      /* Explore-agent cards use the supplied card images. */
+      #root .basis-auto .bg-foreground\/10 {
+        background-size: cover !important;
+        background-position: center !important;
+        background-repeat: no-repeat !important;
+      }
+      #root .basis-auto:nth-child(1) .bg-foreground\/10 { background-image: url("/card-1.png") !important; }
+      #root .basis-auto:nth-child(2) .bg-foreground\/10 { background-image: url("/card-2.png") !important; }
+      #root .basis-auto:nth-child(3) .bg-foreground\/10 { background-image: url("/card-3.png") !important; }
+      #root .basis-auto:nth-child(4) .bg-foreground\/10 { background-image: url("/card-4.png") !important; }
+      #root .basis-auto:nth-child(5) .bg-foreground\/10 { background-image: url("/card-1.png") !important; }
+      #root .basis-auto:nth-child(6) .bg-foreground\/10 { background-image: url("/card-2.png") !important; }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

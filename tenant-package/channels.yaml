@@ -1,0 +1,36 @@
+channels:
+  - id: google-assistant
+    name: Google Assistant
+    description: Manage the owner's Google account across Gmail, Photos, Calendar, Drive, Messages and more.
+    permitted_agents: [google-assistant]
+    allowed_groups: [all]
+  - id: messenger-assistant
+    name: Messenger Assistant
+    description: Read and send Facebook Messenger messages.
+    permitted_agents: [messenger-assistant]
+    allowed_groups: [all]
+  - id: whatsapp-assistant
+    name: WhatsApp Assistant
+    description: Read and send WhatsApp messages.
+    permitted_agents: [whatsapp-assistant]
+    allowed_groups: [all]
+  - id: sms-assistant
+    name: SMS Assistant
+    description: Read and send messages through Google Messages.
+    permitted_agents: [sms-assistant]
+    allowed_groups: [all]
+  - id: general-assistant
+    name: General Assistant
+    description: Ask for help with everyday work.
+    permitted_agents: [general-assistant]
+    allowed_groups: [all]
+  - id: risk-and-compliance
+    name: Risk & Compliance
+    description: Investigate policies, transaction monitoring, and control evidence.
+    permitted_agents: [knowledge, risk-analyst]
+    allowed_groups: [risk, compliance]
+  - id: company-knowledge
+    name: Company Knowledge
+    description: Find authorized answers from company documents.
+    permitted_agents: [knowledge]
+    allowed_groups: [all]

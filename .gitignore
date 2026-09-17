@@ -1,0 +1,17 @@
+# Secrets and local state - never commit these
+.env
+*.env
+!*.env.example
+tunnel-token
+*.secret
+caddy-hashes.txt
+
+# Generated output
+var/
+vault-site/
+help-site/
+*.log
+
+# Local artwork source files (put your own in branding/assets/)
+branding/assets/*
+!branding/assets/README.md

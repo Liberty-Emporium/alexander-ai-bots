@@ -1,0 +1,18 @@
+# Put the deployment on your domain without opening any ports.
+#
+#   1. cloudflared tunnel login
+#   2. cloudflared tunnel create my-bots
+#   3. point the hostnames at the tunnel (cloudflared tunnel route dns)
+#   4. run:  cloudflared --config config.yml tunnel run
+#
+# The tunnel talks to Caddy (deploy/Caddyfile.example), which holds the login
+# gate, and Caddy talks to the app.
+tunnel: replace-with-your-tunnel-id
+credentials-file: /home/youruser/.cloudflared/replace-with-your-tunnel-id.json
+
+ingress:
+  - hostname: bots.example.com
+    service: http://127.0.0.1:9080
+  - hostname: vault.example.com
+    service: http://127.0.0.1:9083
+  - service: http_status:404
