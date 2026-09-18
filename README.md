@@ -93,6 +93,8 @@ The platform is already phone-ready, and the plan for a native client is written
 - [`docs/mobile-architecture.md`](docs/mobile-architecture.md) — what runs today, read from the live deployment
 - [`docs/mobile-api-map.md`](docs/mobile-api-map.md) — every endpoint a mobile client needs, with the streaming contracts
 - [`docs/mobile-reuse-vs-rewrite.md`](docs/mobile-reuse-vs-rewrite.md) — what to reuse, adapt and rewrite, and the three routes to an app
+- [`docs/mobile-auth-findings.md`](docs/mobile-auth-findings.md) — why a gated deployment re-prompts on a phone, and the smallest safe fix
+- [`docs/mobile-capability-gap.md`](docs/mobile-capability-gap.md) — what the installed PWA can already do, measured, and what truly needs native
 
 ## Install it on a phone
 

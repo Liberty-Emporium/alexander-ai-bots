@@ -35,7 +35,8 @@ Multi-user: better-auth session cookie, or SSO.
 |---|---|---|---|
 | POST | `/api/threads/mint` | mint a thread id for a new conversation | durable thread in Intelligence |
 | GET | `/api/threads/:id` | thread state | `known` / unavailable |
-| POST | `/api/copilotkit` | **the chat runtime** | streams **SSE** (`text/event-stream`) |
+| GET | `/api/copilotkit/info` | runtime info: version, agents, capabilities | verified live (reports `transport.streaming: true`) |
+| POST | `/api/copilotkit/...` | **the chat runtime** (base path `/api/copilotkit`) | the client posts runs under this base path |
 
 The chat client speaks the CopilotKit runtime protocol at `/api/copilotkit`, exactly as the web
 app does. This is the one surface where a native client must match a protocol rather than call a
@@ -52,9 +53,10 @@ plain REST endpoint.
 | PUT | `/api/channels/:id/read` | mark read |
 | PUT | `/api/channels/:id/pin` | pin |
 | POST | `/api/channels/:id/activity` | record activity |
-| GET | `/api/channels/events` | **live updates, SSE** |
+| WS | `/api/channels/events` | **live updates — WebSocket** |
 
-`/api/channels/events` is the realtime feed for channel activity — use it rather than polling.
+`/api/channels/events` is a **WebSocket** (not SSE), and it is the realtime feed for channel
+activity. Verified upgrading through the gate and the Cloudflare tunnel.
 
 ## The bot computer (through the gateway only)
 
@@ -87,8 +89,11 @@ plain REST endpoint.
 | GET | `/api/computers/policy` | the action policy |
 | POST | `/api/computers/policy-dry-run` | test a policy change |
 
-For a live screen, poll `screenshot` on a short interval (the web app does the same). The
-computer's own websocket stream is internal and must not be exposed.
+| WS | `/api/computers/:botId/stream` | **the live screen — WebSocket** |
+
+The live screen is a **WebSocket** at `/api/computers/:botId/stream` (verified upgrading through
+the gate and tunnel), not screenshot polling. `screenshot` remains available for a one-off frame.
+The computer's own websocket stream is internal and must not be exposed directly.
 
 ## Activity and governance
 
@@ -132,8 +137,9 @@ The API is served from the same origin as the app and passes through the same ga
 
 ```
 https://<deployment-host>/api/...      (Caddy gate → server)
-https://<deployment-host>/api/copilotkit      (SSE)
-https://<deployment-host>/api/channels/events (SSE)
+https://<deployment-host>/api/copilotkit            (chat runtime)
+wss://<deployment-host>/api/channels/events         (channel events, WebSocket)
+wss://<deployment-host>/api/computers/:botId/stream (live screen, WebSocket)
 ```
 
 SSE works through the gate and the Cloudflare tunnel; no separate host or port is required.
