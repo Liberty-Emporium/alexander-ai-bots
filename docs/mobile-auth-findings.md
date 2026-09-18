@@ -86,6 +86,23 @@ Basic does in a separate app context.
 The native option is the weakest of the four for the least benefit: it adds a shell and puts a
 full-admin credential on the device, to solve a problem a cookie solves without either.
 
+## Implemented
+
+The **cookie-based gate is now in place** for the two gated deployments (Alexander AI Bot and State
+Electric). Randy and Davis remain open by choice. Verified after the change:
+
+- unauthenticated request → `302` to a branded, mobile-friendly login page
+- correct password → `302` + `ob_gate` cookie (`HttpOnly; Secure; SameSite=Lax; Max-Age=30 days`)
+- the cookie opens the app, the Help page, the API **and both WebSockets**
+  (`/api/channels/events` and `/api/computers/:botId/stream` — verified open with the cookie,
+  refused without)
+- wrong password → `401`; ten failures in fifteen minutes from one address are refused
+- data untouched: row counts identical before and after, on all four deployments
+- no container recreated; the gate is an addition in front of the app, and rolling back is
+  restoring one Caddy block
+
+`gate/` in this repository carries the service, the password setter and the documentation.
+
 ## Recommended next step
 
 1. **Leave all four deployments exactly as they are** until you decide. The prompt is an
