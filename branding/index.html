@@ -84,8 +84,10 @@
       /* Light fire glow, tight so the letters stay crisp. */
       #root main, #root main *,
       #root .bg-sidebar, #root .bg-sidebar * {
-        text-shadow: 0 0 3px rgba(255, 190, 80, 0.5),
-                     0 0 9px rgba(255, 110, 0, 0.3) !important;
+        text-shadow: 0 0 7px rgba(255, 218, 120, 1),
+                     0 0 18px rgba(255, 145, 0, 0.9),
+                     0 0 36px rgba(255, 75, 0, 0.65),
+                     0 0 60px rgba(255, 40, 0, 0.4) !important;
       }
 
       /* No box behind the words the user sends. */
@@ -124,6 +126,21 @@
       #root .basis-auto:nth-child(4) .bg-foreground\/10 { background-image: url("/card-4.png") !important; }
       #root .basis-auto:nth-child(5) .bg-foreground\/10 { background-image: url("/card-1.png") !important; }
       #root .basis-auto:nth-child(6) .bg-foreground\/10 { background-image: url("/card-2.png") !important; }
+
+      /* Words you type stay crisp: no glow inside inputs, textareas,
+         selects, the composer, or anything editable - in the main panel
+         and in the side panel alike. */
+      #root input, #root textarea, #root select, #root [contenteditable],
+      #root main input, #root main textarea, #root main select,
+      #root main [contenteditable],
+      #root .bg-sidebar input, #root .bg-sidebar textarea,
+      #root .bg-sidebar select, #root .bg-sidebar [contenteditable] {
+        text-shadow: none !important;
+      }
+      #root input::placeholder, #root textarea::placeholder,
+      #root .bg-sidebar input::placeholder, #root main input::placeholder {
+        text-shadow: none !important;
+      }
     </style>
   </head>
   <body>
