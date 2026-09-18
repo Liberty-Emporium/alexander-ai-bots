@@ -253,6 +253,35 @@ PAGE = """<!doctype html>
     <div style="margin-top:6px;color:#9fb6d9">OpenRouter key: <span id="keystate">checking&hellip;</span></div>
   </div>
 
+  <h2>Giving your bots the live web (TinyFish)</h2>
+  <p>
+    Your bots can already drive their own browser. <b>TinyFish</b> adds a faster, cleaner way to
+    reach the web: a <b>Search</b> API that returns fresh results and a <b>Fetch</b> API that turns
+    any page into clean text &mdash; both <b>free</b> at any balance &mdash; plus a web agent and a
+    stealth browser for the hard pages. It is a separate account from this app, and one key covers
+    all of it.
+  </p>
+
+  <h3>Set it up (about five minutes)</h3>
+  <div class="step"><b class="num">1</b> Create a free account at <b>agent.tinyfish.ai</b>. New
+    accounts start with $8 of credit, and Search and Fetch never draw from it.</div>
+  <div class="step"><b class="num">2</b> Copy your API key from the TinyFish dashboard.</div>
+  <div class="step"><b class="num">3</b> Here in this app, open <b>Admin &rarr; Credentials</b> and
+    add a credential: kind <code>mcp</code>, provider <code>tinyfish</code>, key id
+    <code>tinyfish-api-key</code>, and paste the key as the secret. It is stored encrypted and is
+    never shown again.</div>
+  <div class="step"><b class="num">4</b> Open <b>Admin &rarr; Plugins</b> and add a custom server:
+    id <code>tinyfish</code>, title <code>TinyFish</code>, URL
+    <code>https://agent.tinyfish.ai/mcp</code> &mdash; and pick the credential you just made.</div>
+  <div class="step"><b class="num">5</b> Grant its tools (<code>search</code>, <code>fetch</code>,
+    and any others you want) to the bots that should have them.</div>
+
+  <p>
+    Nothing changes about how your bots are governed: a bot may only use the tools you granted,
+    every call is decided before it happens, and every one is recorded in the Activity Log and the
+    audit trail.
+  </p>
+
   <h2>Good to know</h2>
   <ul>
     <li>If the bots stop answering, it is almost always the OpenRouter key or its credit
