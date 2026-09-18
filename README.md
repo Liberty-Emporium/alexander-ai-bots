@@ -94,6 +94,11 @@ The platform is already phone-ready, and the plan for a native client is written
 - [`docs/mobile-api-map.md`](docs/mobile-api-map.md) — every endpoint a mobile client needs, with the streaming contracts
 - [`docs/mobile-reuse-vs-rewrite.md`](docs/mobile-reuse-vs-rewrite.md) — what to reuse, adapt and rewrite, and the three routes to an app
 
+## Install it on a phone
+
+The platform is installable as an app (home-screen icon, full-screen, no browser chrome) with no
+container rebuild and no database change — see [`pwa/`](pwa/README.md).
+
 ## Requirements
 
 - Docker (the platform runs as containers)
