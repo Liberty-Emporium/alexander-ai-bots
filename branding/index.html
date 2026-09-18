@@ -167,6 +167,28 @@
       @media (max-width: 420px) {
         html { font-size: 16px; }
       }
+
+      /* ------------------------------------------------------------------
+         Phones: the nav toggle moves to the bottom of the page, under the
+         composer, so the side panel is easy to open with a thumb.
+         ------------------------------------------------------------------ */
+      @media (max-width: 760px) {
+        #root button[aria-label="Show sidebar"] {
+          position: fixed !important;
+          left: 50% !important;
+          top: auto !important;
+          transform: translateX(-50%) !important;
+          bottom: 4px !important;
+          z-index: 70 !important;
+          width: 40px; height: 40px;
+          border-radius: 999px;
+          background: rgba(9, 24, 52, 0.9) !important;
+          border: 1px solid rgba(90, 160, 255, 0.55) !important;
+          box-shadow: 0 0 14px rgba(60, 130, 255, 0.35);
+          color: #ffffff !important;
+        }
+        #root button[aria-label="Show sidebar"] svg { color: #ffffff !important; }
+      }
     </style>
   </head>
   <body>
