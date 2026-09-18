@@ -141,6 +141,32 @@
       #root .bg-sidebar input::placeholder, #root main input::placeholder {
         text-shadow: none !important;
       }
+
+      /* ------------------------------------------------------------------
+         Phones: smaller type, lighter glow, comfortable controls.
+         The app collapses its own sidebar on small screens; these rules
+         just size everything for a hand-held screen.
+         ------------------------------------------------------------------ */
+      @media (max-width: 760px) {
+        html { font-size: 17px; }
+        #root .text-\[14px\] { font-size: 16px !important; }
+        #root .text-\[13px\] { font-size: 15px !important; }
+        #root .text-\[12px\] { font-size: 14px !important; }
+        #root .text-\[11px\] { font-size: 13px !important; }
+        #root .text-\[10px\] { font-size: 12px !important; }
+        #root .text-xs { font-size: 14px !important; }
+        [style*="--sidebar-width"] { --sidebar-width: 88vw !important; }
+        #root main, #root main *,
+        #root .bg-sidebar, #root .bg-sidebar * {
+          text-shadow: 0 0 4px rgba(255, 218, 120, 0.9),
+                       0 0 12px rgba(255, 145, 0, 0.65) !important;
+        }
+        body { background-attachment: scroll, scroll; }
+        #root input, #root textarea { font-size: 17px !important; }
+      }
+      @media (max-width: 420px) {
+        html { font-size: 16px; }
+      }
     </style>
   </head>
   <body>

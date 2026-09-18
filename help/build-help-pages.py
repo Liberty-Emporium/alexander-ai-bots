@@ -24,6 +24,13 @@ SITES = [
         "container": "openbot-randy",
     },
     {
+        "slug": "davis",
+        "name": "Davis Carpet",
+        "url": "https://davis-assistant.jays-web.org/",
+        "env": "/home/aais/openbot-davis/.env",
+        "container": "openbot-davis",
+    },
+    {
         "slug": "state",
         "name": "State Electric",
         "url": "https://state-e-john.jays-web.org/",
@@ -97,6 +104,18 @@ PAGE = """<!doctype html>
   .ok {{ color: #7fffb0; }}
   .bad {{ color: #ff9b9b; }}
   footer {{ margin-top: 50px; color: #6f87ab; font-size: 14px; }}
+  @media (max-width: 760px) {{
+    .hero {{ padding: 30px 16px 24px; }}
+    h1 {{ font-size: 26px; }}
+    main {{ padding: 4px 16px 70px; }}
+    h2 {{ font-size: 21px; margin-top: 30px; }}
+    body {{ font-size: 16px; }}
+    .step {{ padding-left: 34px; }}
+    form {{ flex-direction: column; }}
+    input[type=text] {{ flex: 1 1 auto; width: 100%; }}
+    button {{ width: 100%; }}
+  }}
+
 </style>
 </head>
 <body>

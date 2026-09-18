@@ -29,6 +29,14 @@
   #hint {
     position: fixed; left: 14px; bottom: 12px; font-size: 13px; color: #7d94b8; z-index: 5;
   }
+  @media (max-width: 760px) {
+    #bar { flex-wrap: wrap; gap: 8px; padding: 8px 10px; }
+    #title { font-size: 14px; }
+    #search { width: 100%; margin-left: 0; order: 5; }
+    #count { margin-left: auto; font-size: 12px; }
+    #hint { font-size: 11px; left: 10px; bottom: 8px; right: 10px; }
+    #bar a.back { padding: 7px 11px; font-size: 13px; }
+  }
   #tip {
     position: fixed; pointer-events: none; z-index: 6; padding: 6px 10px; border-radius: 9px;
     background: #0b1f42f2; border: 1px solid #2b5390; font-size: 14px; color: #eaf2ff;
@@ -79,7 +87,7 @@ nodes.forEach(n => { n.deg = 0; });
 links.forEach(l => { l.s.deg++; l.t.deg++; });
 
 const view = { x: 0, y: 0, k: 1 };
-let hover = null, dragNode = null, panning = false, last = null, filter = '';
+let hover = null, dragNode = null, panning = false, last = null, filter = '', pinchStart = null;
 
 function toWorld(px, py) { return { x: (px - W / 2) / view.k - view.x, y: (py - H / 2) / view.k - view.y }; }
 function toScreen(x, y) { return { x: (x + view.x) * view.k + W / 2, y: (y + view.y) * view.k + H / 2 }; }
@@ -233,6 +241,57 @@ window.addEventListener('mouseup', (e) => {
   }
   panning = false; last = null; canvas.classList.remove('dragging');
 });
+
+
+// ---- touch: pan, drag a dot, pinch to zoom, tap to open ----
+let touchStart = null, touchMoved = 0;
+canvas.addEventListener('touchstart', (e) => {
+  if (e.touches.length === 1) {
+    const t = e.touches[0];
+    touchStart = { x: t.clientX, y: t.clientY };
+    touchMoved = 0;
+    const n = pick(t.clientX, t.clientY);
+    if (n) { dragNode = n; } else { panning = true; last = { x: t.clientX, y: t.clientY }; }
+  } else if (e.touches.length === 2) {
+    const [a, b] = e.touches;
+    pinchStart = {
+      dist: Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY),
+      k: view.k,
+    };
+    dragNode = null; panning = false;
+  }
+  e.preventDefault();
+}, { passive: false });
+
+canvas.addEventListener('touchmove', (e) => {
+  if (e.touches.length === 1) {
+    const t = e.touches[0];
+    if (touchStart) touchMoved = Math.max(touchMoved, Math.hypot(t.clientX - touchStart.x, t.clientY - touchStart.y));
+    if (dragNode) {
+      const w = toWorld(t.clientX, t.clientY);
+      dragNode.x = w.x; dragNode.y = w.y; dragNode.vx = 0; dragNode.vy = 0;
+    } else if (panning && last) {
+      view.x += (t.clientX - last.x) / view.k;
+      view.y += (t.clientY - last.y) / view.k;
+      last = { x: t.clientX, y: t.clientY };
+    }
+  } else if (e.touches.length === 2 && pinchStart) {
+    const [a, b] = e.touches;
+    const d = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+    view.k = Math.max(0.25, Math.min(4, pinchStart.k * (d / Math.max(pinchStart.dist, 1))));
+  }
+  e.preventDefault();
+}, { passive: false });
+
+canvas.addEventListener('touchend', (e) => {
+  if (dragNode) {
+    const n = dragNode;
+    dragNode = null;
+    if (touchMoved < 8 && n.anchor) window.location.href = VAULT_URL + n.anchor;
+  }
+  panning = false; last = null; touchStart = null;
+  if (e.touches.length === 0) pinchStart = null;
+}, { passive: false });
 
 document.getElementById('search').addEventListener('input', (e) => {
   filter = e.target.value.trim().toLowerCase();

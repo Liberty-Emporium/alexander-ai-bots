@@ -14,12 +14,14 @@ import re
 import markdown
 
 VAULTS = [
-    ("alexander", "Alexander AI Bot", "Alexander AI Bot Vault", "/home/youruser/mybots/vault",
+    ("alexander", "Alexander AI Bot", "Alexander AI Bot Vault", "/home/aais/Documents/AlexanderVault",
      "https://alexander-bot.jays-web.org/"),
     ("randy", "Randy AI Bot", "Randy AI Bot Vault", "/home/aais/Documents/RandyVault",
      "https://randy-assistant.jays-web.org/"),
     ("state", "State Electric", "State Electric Vault", "/home/aais/Documents/StateVault",
      "https://state-e-john.jays-web.org/"),
+    ("davis", "Davis Carpet", "Davis Carpet Vault", "/home/aais/Documents/DavisVault",
+     "https://davis-assistant.jays-web.org/"),
 ]
 OUT_ROOT = "/home/youruser/var/vault-site"
 GRAPH_TEMPLATE = "/home/youruser/alexander-ai-bots/vault/vault-graph.tpl"
@@ -66,7 +68,25 @@ PAGE = """<!doctype html>
   .note pre {{ background: #0e2143; padding: 12px; border-radius: 10px; overflow: auto; }}
   .note a {{ color: #7fd1ff; }}
   .empty {{ color: #9fb6d9; }}
+  /* phones: never let a long line or a wide block push the page sideways */
+  .note p, .note li, .note h2, .note td, .note th {{ overflow-wrap: anywhere; word-break: break-word; }}
+  .note pre {{ max-width: 100%; overflow-x: auto; }}
+  .note table {{ display: block; max-width: 100%; overflow-x: auto; }}
+  .note img {{ max-width: 100%; height: auto; }}
+  .list li {{ overflow-wrap: anywhere; }}
   footer {{ margin-top: 40px; color: #6f87ab; font-size: 13px; }}
+  @media (max-width: 760px) {{
+    .hero {{ padding: 30px 16px 24px; }}
+    h1 {{ font-size: 26px; }}
+    main {{ padding: 4px 16px 70px; }}
+    h2 {{ font-size: 21px; margin-top: 30px; }}
+    body {{ font-size: 16px; }}
+    .step {{ padding-left: 34px; }}
+    form {{ flex-direction: column; }}
+    input[type=text] {{ flex: 1 1 auto; width: 100%; }}
+    button {{ width: 100%; }}
+  }}
+
 </style>
 </head>
 <body>
@@ -148,6 +168,7 @@ def build_graph(vault: str, notes) -> dict:
         base = os.path.basename(rel)[:-3]
         by_name.setdefault(base.lower(), rel)
     by_rel = {rel.lower(): rel for rel, _ in notes}
+    full_by_rel = {rel.lower(): full for rel, full in notes}
 
     nodes = []
     for rel, full in notes:
@@ -156,6 +177,7 @@ def build_graph(vault: str, notes) -> dict:
         except OSError:
             text = ""
         links = set()
+        # 1. explicit Obsidian wikilinks and markdown links
         for m in LINK_WIKI.finditer(text):
             target = by_name.get(m.group(1).strip().lower())
             if target and target != rel:
@@ -165,6 +187,15 @@ def build_graph(vault: str, notes) -> dict:
             target = by_rel.get(raw.lower())
             if target and target != rel:
                 links.add(target)
+        # 2. mentions: a note that names another note is connected to it.
+        #    The Activity Log names the files the bots worked on, so this is
+        #    what draws the real relationships between notes.
+        low = text.lower()
+        for base_low, target in by_name.items():
+            if target == rel or len(base_low) < 4:
+                continue
+            if base_low in low:
+                links.add(target)
         nodes.append({
             "id": rel,
             "label": os.path.basename(rel)[:-3],
@@ -173,11 +204,36 @@ def build_graph(vault: str, notes) -> dict:
             "_links": sorted(links),
         })
 
+    # Channels named in the Conversations log become their own dots, each
+    # connected to that log - they are real channels the bot holds.
+    conversations = next((n for n in nodes if n["id"] == "Conversations.md"), None)
+    if conversations:
+        try:
+            path = full_by_rel.get("conversations.md", "")
+            text = open(path, encoding="utf-8", errors="replace").read() if path else ""
+        except OSError:
+            text = ""
+        for m in re.finditer(r"^##\s+(.+?)\s*$", text, re.M):
+            name = m.group(1).strip()
+            if not name or name.lower() == "conversations":
+                continue
+            node_id = "channel:" + name
+            if any(n["id"] == node_id for n in nodes):
+                continue
+            nodes.append({
+                "id": node_id,
+                "label": name,
+                "color": "#7fe3d0",
+                "anchor": conversations["anchor"],
+                "_links": [],
+            })
+            conversations["_links"].append(node_id)
+
     links = []
     for n in nodes:
-        for target in n["_links"]:
+        for target in n.get("_links", []):
             links.append({"source": n["id"], "target": target})
-        n.pop("_links")
+        n.pop("_links", None)
     return {"nodes": nodes, "links": links}
 
 
