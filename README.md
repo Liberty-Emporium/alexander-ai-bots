@@ -86,6 +86,14 @@ services/          The small service that saves a new OpenRouter key into a depl
 docs/              How it works, branding for customers, updating from OpenBot
 ```
 
+## Mobile
+
+The platform is already phone-ready, and the plan for a native client is written up:
+
+- [`docs/mobile-architecture.md`](docs/mobile-architecture.md) — what runs today, read from the live deployment
+- [`docs/mobile-api-map.md`](docs/mobile-api-map.md) — every endpoint a mobile client needs, with the streaming contracts
+- [`docs/mobile-reuse-vs-rewrite.md`](docs/mobile-reuse-vs-rewrite.md) — what to reuse, adapt and rewrite, and the three routes to an app
+
 ## Requirements
 
 - Docker (the platform runs as containers)
